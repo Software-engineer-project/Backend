@@ -1,40 +1,36 @@
+// Library imports
 const app = require("express")();
-
 const sql = require("mysql2");
 
-const database_name = process.env.MYSQL_DATABASE;
-const database_password = process.env.MYSQL_ROOT_PASSWORD;
+// Import different endpoint managers
+const student = require("./student");
+const professor = require("./professor");
+const course = require("./course");
 
+// Create MySQL connection
 const con = sql.createConnection({
   host: "database",
   port: 3306,
   user: "root",
-  password: database_password,
-  database: database_name,
+  password: process.env.MYSQL_ROOT_PASSWORD,
+  database: process.env.MYSQL_DATABASE,
 });
 
+// Add default route to send the main endpoints
 app.get("/", (req, res) => {
-  con.query("SELECT * FROM User", function (err, result) {
-    if (err) {
-      console.error("error connecting: " + err.stack);
-      return;
-    }
-    res.send(result);
+  res.send({
+    students: "/students",
+    professors: "/professors",
+    courses: "/courses",
   });
 });
 
-app.get("/courses", (req, res) => {
-  con.query("SELECT * FROM Course", function (err, result) {
-    if (err) {
-      console.error("error connecting: " + err.stack);
-      return;
-    }
-    res.send(result);
-  });
-});
+// Register the endpoint managers with the express connection and mysql connection
+student(app, con);
+//professor(app, con);
+//course(app, con);
 
-const port = process.env.PORT || 8081;
-
-app.listen(port, () => {
-  console.log(`apps is listening on http://localhost:${port}`);
+// Makes application listen on appropriate port
+app.listen(process.env.PORT || 8081, () => {
+  console.log(`Starting express server...`);
 });
