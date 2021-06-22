@@ -64,8 +64,8 @@ function getUserCourses(con) {
 
 // Exports the endpoint manager
 module.exports = function endpoint(app, con) {
-  app.use("/students/id/:userid", selectStudentByID(con));
-  app.use("/students/id/:userid/courses", getUserCourses(con));
-  app.use("/students/all", getAllStudents(con));
-  app.use("/students", getStudentEndpoints(con));
+  app.get("/students/id/:userid", selectStudentByID(con));
+  app.get("/students/id/:userid/courses", getUserCourses(con));
+  app.get("/students/all", getAllStudents(con));
+  app.get("/students", getStudentEndpoints(con));
 };
