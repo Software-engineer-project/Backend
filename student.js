@@ -5,13 +5,15 @@
 //   [] /students/all/:university = Get all students that attend a specific university
 //  [x] /students = List endpoints
 
+const authRequest = require("./auth/authRequest");
+
 // /students
 // Lists all the endpoints owned by the students associated endpoints
 function getStudentEndpoints() {
   return function (req, res) {
     res.send({
-      GetStudentByID: "/students/id/:id",
-      GetStudentCourses: "/students/id/:id/courses",
+      GetStudentByID: "/students/id/:userid",
+      GetStudentCourses: "/students/id/:userid/courses",
       GetAllStudents: "/students/all",
       GetAllStudentsByUni: "/students/all/:university",
     });
@@ -64,6 +66,8 @@ function getUserCourses(con) {
 
 // Exports the endpoint manager
 module.exports = function endpoint(app, con) {
+  app.use("/students", authRequest(app, con));
+
   app.get("/students/id/:userid", selectStudentByID(con));
   app.get("/students/id/:userid/courses", getUserCourses(con));
   app.get("/students/all", getAllStudents(con));
