@@ -1,11 +1,15 @@
 // Library imports
 const app = require("express")();
 const sql = require("mysql2");
+const cors = require("cors");
+
+app.use(cors());
 
 // Import different endpoint managers
 const student = require("./student");
 const professor = require("./professor");
 const course = require("./course");
+const login = require("./auth/login");
 
 // Create MySQL connection
 const con = sql.createConnection({
@@ -29,6 +33,9 @@ app.get("/", (req, res) => {
 student(app, con);
 //professor(app, con);
 //course(app, con);
+
+// Register specific endpoint managers
+login(app, con);
 
 // Makes application listen on appropriate port
 app.listen(process.env.PORT || 8081, () => {
