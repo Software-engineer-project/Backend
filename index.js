@@ -1,9 +1,16 @@
 // Library imports
-const app = require("express")();
+const express = require("express");
+const app = express();
 const sql = require("mysql2");
 const cors = require("cors");
 
 app.use(cors());
+app.use(express.json());
+app.use(
+  express.urlencoded({
+    extended: true,
+  })
+);
 
 // Import different endpoint managers
 const student = require("./student");
