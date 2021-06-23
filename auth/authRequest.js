@@ -1,18 +1,20 @@
 module.exports = function authRequest(app, con) {
   return function (req, res, next) {
-    if (req.body) {
+    if (req.body.Token) {
+      console.log(req.body.Token);
       con.query(
-        `SELECT * FROM Auth WHERE Token = ${req.body}`,
+        `SELECT * FROM Auth WHERE Token = ${req.body.Token}`,
         function (err, result) {
           if (err) {
             console.error("error connecting: " + err.stack);
             return;
           }
+          console.log(result);
           next();
         }
       );
     } else {
-      res.send("invalid");
+      res.send("403"); // Code for bad permission
     }
   };
 };
