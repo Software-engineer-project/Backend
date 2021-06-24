@@ -3,7 +3,7 @@ module.exports = function authRequest(app, con) {
     if (req.body.Token) {
       console.log(req.body.Token);
       con.query(
-        `SELECT * FROM Auth WHERE Token = ${req.body.Token}`,
+        `SELECT * FROM Auth WHERE Token = '${req.body.Token}'`,
         function (err, result) {
           if (err) {
             console.error("error connecting: " + err.stack);
