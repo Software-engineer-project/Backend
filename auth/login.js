@@ -10,7 +10,7 @@ function handleLogin(con) {
         function (err, result) {
           if (err) {
             console.error("error connecting: " + err.stack);
-            res.send("Error connecting to database: " + err.stack);
+            res.status(500).send("Error connecting to database: " + err.stack);
             return;
           }
           if (result.length == 1) {
@@ -36,16 +36,12 @@ function handleLogin(con) {
               }
             );
           } else {
-            res.send({
-              code: "401",
-            });
+            res.status(401).end(); // Invalid credentials code
           }
         }
       );
     } else {
-      res.send({
-        code: "401",
-      });
+      res.status(401).end(); // Invalid credentials code
     }
   };
 }

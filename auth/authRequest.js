@@ -14,7 +14,7 @@ module.exports = function authRequest(app, con) {
         }
       );
     } else {
-      res.send("403"); // Code for bad permission
+      res.status(403).end(); // Bad permission
     }
   };
 };
