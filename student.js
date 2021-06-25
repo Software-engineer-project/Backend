@@ -29,6 +29,7 @@ function getAllStudents(con) {
       function (err, result) {
         if (err) {
           console.error("error connecting: " + err.stack);
+          res.status(500).send("Error from database: " + err.stack); // Internal server error code
           return;
         }
         res.send(result);
@@ -47,9 +48,22 @@ function selectStudentByID(con) {
       function (err, result) {
         if (err) {
           console.error("error connecting: " + err.stack);
+          res.status(500).send("Error from database: " + err.stack); // Internal server error code
           return;
         }
-        res.send(result);
+        if (result.length == 1) {
+          const user = {
+            UserID: result[0].UserID,
+            University: result[0].University,
+            Email: result[0].Email,
+            FirstName: result[0].FirstName,
+            LastName: result[0].LastName,
+            IsProfessor: result[0].IsProfessor,
+          };
+          res.send(user);
+        } else {
+          res.status(404).send("User not found"); // Bad permission
+        }
       }
     );
   };
@@ -68,8 +82,8 @@ function getUserCourses(con) {
 module.exports = function endpoint(app, con) {
   app.use("/students", authRequest(app, con));
 
-  app.get("/students/id/:userid", selectStudentByID(con));
-  app.get("/students/id/:userid/courses", getUserCourses(con));
-  app.get("/students/all", getAllStudents(con));
-  app.get("/students", getStudentEndpoints(con));
+  app.post("/students/id/:userid", selectStudentByID(con));
+  app.post("/students/id/:userid/courses", getUserCourses(con));
+  app.post("/students/all", getAllStudents(con));
+  app.post("/students", getStudentEndpoints(con));
 };

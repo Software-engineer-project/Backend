@@ -1,7 +1,7 @@
 const md5 = require("md5");
 const crypto = require("crypto");
 
-function handleLogin(con) {
+function loginCred(con) {
   return function (req, res) {
     if (req.body && req.body.email && req.body.password) {
       con.query(
@@ -46,8 +46,8 @@ function handleLogin(con) {
   };
 }
 
-function handleAuth(con) {
-  return function (req, res, next) {
+function loginToken(con) {
+  return function (req, res) {
     if (req.body.Token) {
       con.query(
         `SELECT * FROM Auth WHERE Token = '${req.body.Token}'`,
@@ -95,6 +95,6 @@ function handleAuth(con) {
 }
 
 module.exports = function endpoint(app, con) {
-  app.post("/login", handleLogin(con));
-  app.post("/auth", handleAuth(con));
+  app.post("/login", loginCred(con));
+  app.post("/auth", loginToken(con));
 };
